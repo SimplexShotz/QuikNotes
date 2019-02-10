@@ -1,0 +1,22 @@
+{
+  "name": "QuikNotes",
+  "version": "1.0",
+  "description": "The quikest.",
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs",
+    "notifications",
+    "http://*/",
+    "https://*/",
+    "storage"
+  ],
+  "manifest_version": 2
+}

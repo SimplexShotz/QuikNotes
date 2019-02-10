@@ -1,10 +1,10 @@
 
 function set(key, value, callback) {
-  chrome.storage.sync.set({key.toString(): value}, callback() || (function() {}));
+  chrome.storage.sync.set({[key]: value}, callback() || (function() {}));
 }
 function get(key, callback) {
   var r;
-  chrome.storage.sync.set({key: key}, callback(result) || (function(result) { r = result; }));
+  chrome.storage.sync.get([key], callback(result) || (function(result) { r = result; }));
   if (r) {
     return r;
   }

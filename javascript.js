@@ -1,16 +1,26 @@
 
 function set(key, value, callback) {
-  chrome.storage.sync.set({[key]: value}, callback() || (function() {}));
+  if (typeof callback === "function") {
+    chrome.storage.sync.set({[key]: value}, callback());
+  } else {
+    chrome.storage.sync.set({[key]: value}, function() {});
+  }
 }
-function get(key, callback) {
-  var r;
-  chrome.storage.sync.get([key], callback(result) || (function(result) { r = result; }));
-  if (r) {
-    return r;
+async function get(key, callback) {
+  // var r;
+  if (typeof callback === "function") {
+    chrome.storage.sync.get([key], callback);
+  } else {
+    // console.log("before await: ");
+    // await chrome.storage.sync.get([key], function(result) { r = result; console.log("during awiat: "); console.log(r); console.log("-"); });
+    // console.log("after await: " + r);
+    // return r;
+    var a = await new Promise((succ) => chrome.storage.sync.get([key], succ));
+    return a[key];
   }
 }
 
-window.addEventListener("load", function load(event) {
+window.addEventListener("load", async function load(event) {
   // document.getElementById("Standard").onclick = function() {
   //   chrome.tabs.query({"active": true, "lastFocusedWindow": true}, function(tabs) {
   //     chrome.tabs.insertCSS(tabs[0].id, {
@@ -18,7 +28,17 @@ window.addEventListener("load", function load(event) {
   //     });
   //   });
   // };
-  set("test", 12);
-  console.log(set.toString());
-  console.log(get("test"));
+  if (await get("Text") === undefined) {
+    set("Text", "");
+  }
+  document.getElementById("Text").value = await get("Text");
+  document.getElementById("Save").onclick = function() {
+    document.getElementById("Save").innerText = "Saving...";
+    set("Text", document.getElementById("Text").value, function() {
+      document.getElementById("Save").innerText = "Saved!";
+      setTimeout(function() {
+        document.getElementById("Save").innerText = "Save";
+      }, 1000);
+    });
+  };
 });

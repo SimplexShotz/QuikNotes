@@ -19,6 +19,29 @@ async function get(key, callback) {
     return a[key];
   }
 }
+function run(type, code) {
+  var code = code.toString();
+  switch (type.toLowerCase()) {
+    case "js":
+    case "javascript":
+      return function() {
+        chrome.tabs.query({"active": true, "lastFocusedWindow": true}, function(tabs) {
+          chrome.tabs.executeScript(tabs[0].id, {
+            "code": code
+          });
+        });
+      };
+    break;
+    case "css":
+      return function() {
+        chrome.tabs.query({"active": true, "lastFocusedWindow": true}, function(tabs) {
+          chrome.tabs.insertCSS(tabs[0].id, {
+            "code": code
+          });
+        });
+      }
+  }
+};
 
 window.addEventListener("load", async function load(event) {
   // document.getElementById("Standard").onclick = function() {

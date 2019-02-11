@@ -80,4 +80,9 @@ window.addEventListener("load", async function load(event) {
       }, 1000);
     });
   };
+  // run(function() {
+  //   document.body.innerHTML = "<b>wow</b>";
+  //   alert("This works!");
+  // });
+  // a.onclick = run(() => { /* code */ }, true); // true needed to return value
 });
